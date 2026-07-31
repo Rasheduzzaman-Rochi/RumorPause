@@ -7,10 +7,12 @@ class ShareService {
     required String content,
   }) async {
     final String shareText =
-        'আমি এটি RumorPause দিয়ে check করেছি। Source verify করে দেখুন:
+        'আমি এটি RumorPause দিয়ে check করেছি। Source verify করে দেখুন:\n\n$content';
 
-$content';
-
-    await Share.share(shareText);
+    await SharePlus.instance.share(
+      ShareParams(
+        text: shareText,
+      ),
+    );
   }
 }
