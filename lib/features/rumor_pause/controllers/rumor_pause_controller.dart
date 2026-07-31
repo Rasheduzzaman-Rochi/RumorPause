@@ -54,4 +54,24 @@ class RumorPauseController {
       answers: answers,
     );
   }
+
+  void setSharedMessage(String message) {
+    final String cleanMessage = message.trim();
+
+    if (cleanMessage.isEmpty) return;
+
+    sharedMessage = cleanMessage;
+
+    answers = const ReflectionAnswers(
+      beforeShareScore: 3,
+    );
+
+    // When content is received from another app,
+    // start from the screen where the shared content is shown.
+    currentStep = 1;
+  }
+
+  List<String> get detectedIssues {
+    return _riskAnalyzerService.detectIssues(sharedMessage);
+  }
 }

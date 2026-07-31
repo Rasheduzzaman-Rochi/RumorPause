@@ -9,4 +9,7 @@ class AppTexts {
       'এই content share করার আগে ৩টা বিষয় দেখে নেওয়া ভালো। '
       'Source আছে কি না, date বা official link আছে কি না, '
       'এবং message-টি ভয় দেখিয়ে দ্রুত share করতে বলছে কি না।';
+
+  static const String surveyFormUrl =
+      'https://docs.google.com/forms/d/e/1FAIpQLScqbblfW_6jnzvTN5kpSNK9x8r_YB3rTvuFABk0q8dTlDeSkA/viewform?usp=sharing&ouid=103209243623604083073';
 }

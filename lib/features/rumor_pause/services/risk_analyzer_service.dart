@@ -66,4 +66,88 @@ class RiskAnalyzerService {
           'Risk কম মনে হলেও share করার আগে source check করা ভালো অভ্যাস।',
     );
   }
+
+  List<String> detectIssues(String message) {
+    final String text = message.toLowerCase();
+    final List<String> issues = [];
+
+    final bool hasUrl = text.contains('http://') ||
+        text.contains('https://') ||
+        text.contains('www.');
+    final bool isYouTubeLink =
+        text.contains('youtube.com') || text.contains('youtu.be');
+    final bool isFacebookLink =
+        text.contains('facebook.com') || text.contains('fb.watch');
+
+    final List<String> urgencyWords = [
+      'জরুরি',
+      'এখনই',
+      'আজ রাত',
+      'দ্রুত',
+      'সবাইকে পাঠান',
+      'পাঠিয়ে দিন',
+      'share করুন',
+      'শেয়ার করুন',
+      'ভাইরাল করুন',
+    ];
+
+    final List<String> fearWords = [
+      'ক্ষতি',
+      'বিপদ',
+      'মারা যাবে',
+      'ভয়ংকর',
+      'সতর্কতা',
+      'না হলে',
+      'শেষ',
+    ];
+
+    final List<String> officialClaimWords = [
+      'সরকার ঘোষণা',
+      'সরকার বলেছে',
+      'official',
+      'অফিসিয়াল',
+      'নোটিশ',
+      'ঘোষণা দিয়েছে',
+    ];
+
+    final bool hasUrgency =
+        urgencyWords.any((word) => text.contains(word.toLowerCase()));
+    final bool hasFear =
+        fearWords.any((word) => text.contains(word.toLowerCase()));
+    final bool hasOfficialClaim =
+        officialClaimWords.any((word) => text.contains(word.toLowerCase()));
+
+    if (hasUrgency) {
+      issues.add('Message-এ দ্রুত share করার চাপ আছে');
+    }
+
+    if (hasFear) {
+      issues.add('Message-এ ভয় বা ক্ষতির ভাষা আছে');
+    }
+
+    if (hasOfficialClaim && !hasUrl) {
+      issues.add('Official claim আছে, কিন্তু reliable link পাওয়া যায়নি');
+    }
+
+    if (!hasUrl) {
+      issues.add('Source বা official link পরিষ্কার না');
+    }
+
+    if (isYouTubeLink) {
+      issues.add(
+          'YouTube link পাওয়া গেছে — share করার আগে channel/source check করা ভালো');
+    }
+
+    if (isFacebookLink) {
+      issues.add(
+          'Facebook link পাওয়া গেছে — post/page source verify করা ভালো');
+    }
+
+    if (issues.isEmpty) {
+      issues.add(
+          'বড় warning sign পাওয়া যায়নি, তবে share করার আগে source check করা ভালো');
+    }
+
+    return issues;
+  }
 }

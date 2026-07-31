@@ -14,6 +14,8 @@ class FinalSuggestionScreen extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback onRestart;
   final VoidCallback onReplaySuggestion;
+  final VoidCallback onOpenSurvey;
+  final VoidCallback onShareSafely;
 
   const FinalSuggestionScreen({
     super.key,
@@ -23,6 +25,8 @@ class FinalSuggestionScreen extends StatelessWidget {
     required this.onBack,
     required this.onRestart,
     required this.onReplaySuggestion,
+    required this.onOpenSurvey,
+    required this.onShareSafely,
   });
 
   @override
@@ -123,24 +127,12 @@ class FinalSuggestionScreen extends StatelessWidget {
           PrimaryButton(
             text: 'Share Safely',
             icon: Icons.share_rounded,
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Next step-এ real share option add করবো।'),
-                ),
-              );
-            },
+            onPressed: onShareSafely,
           ),
           const SizedBox(height: 12),
           SecondaryButton(
             text: 'Survey দিন',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Next step-এ Google Form link add করবো।'),
-                ),
-              );
-            },
+            onPressed: onOpenSurvey,
           ),
           const SizedBox(height: 12),
           TextButton(

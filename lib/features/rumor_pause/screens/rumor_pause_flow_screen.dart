@@ -9,6 +9,9 @@ import 'question_screen.dart';
 import 'reflection_start_screen.dart';
 import 'sample_message_screen.dart';
 import 'welcome_screen.dart';
+import '../services/survey_service.dart';
+import '../services/share_service.dart';
+import '../services/share_receiver_service.dart';
 
 class RumorPauseFlowScreen extends StatefulWidget {
   const RumorPauseFlowScreen({super.key});
@@ -20,15 +23,19 @@ class RumorPauseFlowScreen extends StatefulWidget {
 class _RumorPauseFlowScreenState extends State<RumorPauseFlowScreen> {
   final RumorPauseController controller = RumorPauseController();
   final VoiceService voiceService = VoiceService();
-
+  final SurveyService surveyService = const SurveyService();
+  final ShareService shareService = const ShareService();
+  final ShareReceiverService shareReceiverService = ShareReceiverService();
   @override
   void initState() {
     super.initState();
     voiceService.init();
+    _setupShareReceiving();
   }
 
   @override
   void dispose() {
+    shareReceiverService.dispose();
     voiceService.dispose();
     super.dispose();
   }
@@ -48,6 +55,52 @@ class _RumorPauseFlowScreenState extends State<RumorPauseFlowScreen> {
   void _restart() {
     voiceService.stop();
     setState(controller.restart);
+  }
+
+  Future<void> _openSurveyForm() async {
+    final bool opened = await surveyService.openSurveyForm(
+      AppTexts.surveyFormUrl,
+    );
+
+    if (!opened && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Survey form open করা যায়নি। Link check করুন।'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _shareSafely() async {
+    await shareService.shareCheckedContent(
+      content: controller.sharedMessage,
+    );
+  }
+
+  void _setupShareReceiving() {
+    shareReceiverService.listenForSharedContent(
+      onContentReceived: _handleSharedContent,
+    );
+
+    shareReceiverService.checkInitialSharedContent(
+      onContentReceived: _handleSharedContent,
+    );
+  }
+
+  void _handleSharedContent(String content) {
+    if (!mounted) return;
+
+    voiceService.stop();
+
+    setState(() {
+      controller.setSharedMessage(content);
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Shared content RumorPause-এ এসেছে।'),
+      ),
+    );
   }
 
   Future<void> _speakForCurrentStep() async {
@@ -125,6 +178,7 @@ class _RumorPauseFlowScreenState extends State<RumorPauseFlowScreen> {
       case 3:
         return CheckingScreen(
           message: controller.sharedMessage,
+          detectedIssues: controller.detectedIssues,
           onNext: _next,
           onBack: _back,
         );
@@ -195,6 +249,8 @@ class _RumorPauseFlowScreenState extends State<RumorPauseFlowScreen> {
           onBack: _back,
           onRestart: _restart,
           onReplaySuggestion: _speakFinalSuggestion,
+          onOpenSurvey: _openSurveyForm,
+          onShareSafely: _shareSafely,
         );
     }
   }
