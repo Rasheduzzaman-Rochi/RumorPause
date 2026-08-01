@@ -26,49 +26,40 @@ class CheckingScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const StepText(step: 'Step 3 of 7'),
-                  const SizedBox(height: 12),
-                  const PageTitle(
-                    title: 'Message Checking',
-                    subtitle:
-                        'Prototype version-এ simple rule-based checking দেখানো হচ্ছে।',
-                  ),
-                  const SizedBox(height: 24),
-                  MessageCard(message: message),
-                  const SizedBox(height: 22),
-                  Container(
-                    padding: const EdgeInsets.all(18),
-                    decoration: cardDecoration(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Row(
-                          children: [
-                            Icon(Icons.warning_amber_rounded,
-                                color: AppColors.warning),
-                            SizedBox(width: 8),
-                            Text(
-                              'Detected Issues',
-                              style: TextStyle(
-                                fontSize: 21,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.textDark,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        ...detectedIssues.map((issue) => IssueItem(text: issue)),
-                      ],
+          const StepText(step: 'Step 3 of 7'),
+          const SizedBox(height: 12),
+          const PageTitle(
+            title: 'Message Checking',
+            subtitle:
+                'Prototype version-এ simple rule-based checking দেখানো হচ্ছে।',
+          ),
+          const SizedBox(height: 24),
+          MessageCard(message: message),
+          const SizedBox(height: 22),
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: cardDecoration(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  children: [
+                    Icon(Icons.warning_amber_rounded,
+                        color: AppColors.warning),
+                    SizedBox(width: 8),
+                    Text(
+                      'Detected Issues',
+                      style: TextStyle(
+                        fontSize: 21,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textDark,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                ...detectedIssues.map((issue) => IssueItem(text: issue)),
+              ],
             ),
           ),
           const SizedBox(height: 16),
