@@ -103,43 +103,6 @@ class _RumorPauseFlowScreenState extends State<RumorPauseFlowScreen> {
     );
   }
 
-  Future<void> _speakForCurrentStep() async {
-    await Future.delayed(const Duration(milliseconds: 250));
-
-    if (!mounted) return;
-
-    switch (controller.currentStep) {
-      case 4:
-        await voiceService.speak(AppTexts.reflectionVoiceText);
-        break;
-
-      case 5:
-        await voiceService.speak(
-          'প্রথম প্রশ্ন। এই message-এ trusted source আছে কি?',
-        );
-        break;
-
-      case 6:
-        await voiceService.speak(
-          'দ্বিতীয় প্রশ্ন। এই message-এ clear date বা official link আছে কি?',
-        );
-        break;
-
-      case 7:
-        await voiceService.speak(
-          'তৃতীয় প্রশ্ন। Message-টি কি ভয় দেখিয়ে দ্রুত share করতে বলছে?',
-        );
-        break;
-
-      case 8:
-        await voiceService.speak(controller.riskResult.suggestion);
-        break;
-
-      default:
-        break;
-    }
-  }
-
   Future<void> _speakReflectionGuide() async {
     await voiceService.speak(AppTexts.reflectionVoiceText);
   }
